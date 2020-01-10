@@ -3,7 +3,7 @@ const ATJAUNOT = 5000;
 async function lasiChatu() {
     const atbilde = await fetch('/chats/lasi');
     const datuObjekts = await atbilde.json();
-    raadiChatuVienkarshi(datuObjekts);
+    raadiChataRindas(datuObjekts);
     await new Promise(resolve => setTimeout(resolve, ATJAUNOT));
     await lasiChatu();
 }
@@ -30,7 +30,7 @@ async function suutiZinju() {
         body: JSON.stringify({"chats": zinja})
     });
     const datuObjekts = await atbilde.json();
-    raadiChatuVienkarshi(datuObjekts);
+    raadiChataRindas(datuObjekts);
 }
 
 let ievadesLauks = document.getElementById("zinja");
@@ -39,3 +39,30 @@ ievadesLauks.addEventListener("keyup", function (event) {
         suutiZinju();
     }
 });
+
+function raadiChataRindas(dati) {
+    const chatUL = document.getElementById("chats");
+    // novaacam ieprieksheejo saturu
+    while (chatUL.firstChild) {
+        chatUL.firstChild.remove();
+    }
+    for (let rinda of dati["chats"]) {
+        chatLI = izveidoJaunuRindu(rinda);
+        chatUL.appendChild(chatLI);
+    }
+    // noskrolleejam uz leju pie peedeejaa chata texta
+    var chatScrollBox = chatUL.parentNode;
+    chatScrollBox.scrollTop = chatScrollBox.scrollHeight;
+}
+
+
+function izveidoJaunuRindu(zinja) {
+    let newLI = document.createElement("li");
+    newLI.className = "left clearfix"
+    let newDiv = document.createElement("div");
+    newDiv.className = "chat-body clearfix"
+    let newContent = document.createTextNode(zinja);
+    newLI.appendChild(newDiv);
+    newDiv.appendChild(newContent);
+    return newLI;
+}
